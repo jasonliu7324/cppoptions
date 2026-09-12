@@ -14,6 +14,8 @@
 #include "EuropeanCallOption.hpp"               // For Call options
 #include "EuropeanPutOption.hpp"                // For Put options
 #include <vector>                               // For vectors
+#include <string>                                // For labels
+#include <stdexcept>                             // For invalid_argument
 
 
 namespace Jason
@@ -46,7 +48,28 @@ namespace Jason
                                               const std::vector<double>& mesh,
                                               void (ParamType::*setter)(double), 
                                               double (ParamType::*getter)() const,
-                                              double (OptionType::*quantity)() const = &OptionType::price);
+                                              double (OptionType::*quantity)() const = &OptionType::price)
+        {
+            std::vector<double> price;      // price vector that we return
+
+            // Capture original
+            double original = (option.*getter)();
+
+            // Iterate through elements of the mesh, which differe for underlying ParamType
+            for (auto it = mesh.begin(); it != mesh.end(); ++it)
+            {
+                // Update option with new ParamType at each increment
+                (option.*setter)(*it);
+
+                // Compute the quantity at each step
+                // Done with the function pointer passed through
+                price.push_back((option.*quantity)());      
+            }
+
+            // Reset to original 
+            (option.*setter)(original);
+            return price;
+        }
 
         // Matrix version of QuantityOverParam
         // General version that handles parameters S, K, r, sig, b
@@ -62,7 +85,39 @@ namespace Jason
         std::vector<std::vector<double> > OptionMatrix(OptionType& option,
                                                        const std::vector<std::string>& labels,
                                                        const std::vector<std::vector<double> >& meshes,
-                                                       double (OptionType::*quantity)() const = &OptionType::price);
+                                                       double (OptionType::*quantity)() const = &OptionType::price)
+        {
+            // Label size must match number of meshes
+            if (labels.size() != meshes.size())
+                throw std::invalid_argument("Number of labels must match length of meshes");
+
+            // Matrix to be returned
+            std::vector<std::vector<double> > mat;
+
+            // Iterate through the size of labels
+            for (int i = 0; i < labels.size(); ++i)
+            {
+                const std::string& label = labels[i];           // Set the current parameter we iterate over
+                const std::vector<double> row = meshes[i];      // Set parameter mesh
+
+                // Compare the labels and call appropriate QuantityOverParam function
+                if (label == "S")
+                    mat.push_back(QuantityOverParam(option, row, &OptionType::setS, &OptionType::getS, quantity));
+                else if (label == "K")  
+                    mat.push_back(QuantityOverParam(option, row, &OptionType::setK, &OptionType::getK, quantity));
+                else if (label == "r")
+                    mat.push_back(QuantityOverParam(option, row, &OptionType::setR, &OptionType::getR, quantity));
+                else if (label == "sig")
+                    mat.push_back(QuantityOverParam(option, row, &OptionType::setSig, &OptionType::getSig, quantity));
+                else if (label == "b")
+                    mat.push_back(QuantityOverParam(option, row, &OptionType::setB, &OptionType::getB, quantity));
+                else
+                    // if label unknown, throw error
+                    throw std::invalid_argument("Unknown label" + label);
+            }
+
+            return mat;
+        }
 
 
         // Specialized OptionMatrix for EuropeanOptions
@@ -73,7 +128,34 @@ namespace Jason
         std::vector<std::vector<double> > EuropeanOptionMatrix(OptionType& option,
                                                                const std::vector<std::string>& labels,
                                                                const std::vector<std::vector<double> >& meshes,
-                                                               double (OptionType::*quantity)() const = &OptionType::price);
+                                                               double (OptionType::*quantity)() const = &OptionType::price)
+        {
+            // Label size must match number of meshes
+            if (labels.size() != meshes.size())
+                throw std::invalid_argument("Number of labels must match length of meshes");
+            
+            // Matrix to be returned
+            std::vector<std::vector<double> > mat;
+
+            // Iterate through size of labels
+            for (int i = 0; i < labels.size(); ++i)
+            {
+                const std::string& label = labels[i];           // Set current parameter we iterate over
+                const std::vector<double> row = meshes[i];      // Set parameter mesh
+
+                // Compare the labels and call appropriate function
+                if (label == "T")
+                    mat.push_back(QuantityOverParam(option, row, &EuropeanOption::setT, &EuropeanOption::getT, quantity));
+                else
+                    // Instead of rewriting, ew may reuse the previous function
+                    // {label}, {row} is list initialization syntax for vector that contains 
+                    // a "label" and "row" temporarily
+                    // Call .front() pulls the first element of the matrix out (whcih is a vector)
+                    mat.push_back((OptionMatrix(option, {label}, {row}, quantity)).front());
+            }
+
+            return mat;
+        }
 
 
         // priceMatrix utility function to print
@@ -87,32 +169,3 @@ namespace Jason
 
 
 #endif // OPTIONGLOBALFUNCTION_HPP
-
-
-/*
-
-    // Some retired code that has been since updated 
-
-    // General version of PriceOver(Param)
-    template <typename OptionType, typename ParamType>
-    std::vector<double> PriceOverParam(OptionType& option, 
-                                        const std::vector<double>& mesh,
-                                        void (ParamType::*setter)(double),
-                                        double (ParamType::*getter)() const);
-
-    // Matrix version of PriceOver
-    // General Version that handles parameters S, K, r, sig, b
-    // Inputs: Option (Any general option)
-    //         Labels ({"S", "K", "r"}) to vary over
-    //         Meshs per label to iterate over
-    std::vector<std::vector<double> > priceMatrix(Option& option, 
-                                                    const std::vector<std::string>& labels,
-                                                    const std::vector<std::vector<double> >& meshes);
-
-    // EuropeanOptions version that handles parameters S, K, r, sig, b, and T
-    // Inputs: same as above
-    std::vector<std::vector<double> > priceMatrixEuropean(EuropeanOption& option, 
-                                            const std::vector<std::string>& labels,
-                                            const std::vector<std::vector<double> >& meshes);
-
-*/

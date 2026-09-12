@@ -16,7 +16,7 @@
 #include "EuropeanPutOption.hpp"
 #include "AmericanPerpetualCallOption.hpp"
 #include "AmericanPerpetualPutOption.hpp"
-#include "OptionGlobalFunctions.cpp"
+#include "OptionGlobalFunctions.hpp"
 
 #include <iostream>
 #include <vector>
