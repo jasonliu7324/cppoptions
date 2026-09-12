@@ -1,2 +1,2 @@
-# cppoptions
-Private Repo for Options + Options Math backengine
+# Options Library
+Home to private access of Options Library + Any math backengine for Options
