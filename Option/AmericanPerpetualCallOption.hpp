@@ -37,6 +37,9 @@ namespace Jason
                 double PayOff() const;              // Returns payoff
                 double PayOff(double S) const;      // Returns payoff given asset price S
 
+                bool hasClosedForm() const; 
+                bool isPerpetual() const;
+
         };
     }   // namespace Finance
 }   // namespace Jason

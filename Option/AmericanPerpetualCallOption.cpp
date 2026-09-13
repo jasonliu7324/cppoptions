@@ -75,6 +75,16 @@ namespace Jason
             return std::max(S - getK(), 0.0);
         }
         
+        bool AmericanPerpetualCallOption::hasClosedForm() const
+        {
+            return true;
+        }
+
+        bool AmericanPerpetualCallOption::isPerpetual() const
+        {
+            return true;
+        }
+
 
     }   // namespace Finance
 }   // namespace Finance

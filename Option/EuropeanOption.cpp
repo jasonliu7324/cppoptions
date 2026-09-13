@@ -117,5 +117,16 @@ namespace Jason
             return (num) / (h * h);
         }
 
+        bool EuropeanOption::hasClosedForm() const
+        {
+            return true;
+        }
+
+        bool EuropeanOption::isPerpetual() const
+        {
+            return false;
+        }
+
+        
     }   // namespace Finance
 }   // namespace Jason

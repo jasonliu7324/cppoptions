@@ -45,6 +45,9 @@ namespace Jason
                 
                 double gamma() const;                 // Gamma of option (same for both call and put) 
                 double gammaApprox(double h);         // Gamma via 3-point order approximation
+
+                bool hasClosedForm() const; 
+                bool isPerpetual() const;
         };
     }   // namespace Finance
 }   // namespace Jason

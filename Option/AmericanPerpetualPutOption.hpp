@@ -37,6 +37,8 @@ namespace Jason
                 double PayOff() const;              // returns payoff of perpetual put
                 double PayOff(double S) const;      // returns payoff of perpetual put given asset price
 
+                bool hasClosedForm() const; 
+                bool isPerpetual() const;
         };
     }   // namespace Finance
 }   // namespace Jason

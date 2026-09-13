@@ -4,6 +4,9 @@
 // 
 //
 
+// 9/2026: Updated with new Virtual functions PayOff, hasClosedForm, and isPerpetual
+//         Updated for implementing FDM and MC
+
 #ifndef OPTION_HPP
 #define OPTION_HPP
 
@@ -51,11 +54,11 @@ namespace Jason
 
                 Option& operator = (const Option& source);      // Assignment Operator 
 
-                // PVMF price function
-                // Will vary depending on derived class
-                // E.g. EuroPutOption will have different Price() vs EuroCallOption
-                virtual double price() const = 0;       // Polymorphic price function 
-                virtual double PayOff() const = 0;      // Polymorphic payoff function
+                // Virtual functions
+                virtual double price() const = 0;          // Polymorphic price function 
+                virtual double PayOff() const = 0;         // Polymorphic payoff function
+                virtual bool hasClosedForm() const = 0;    // Checks if there exists closed form solution
+                virtual bool isPerpetual() const = 0;      // Checks if there exists infinite time horizon
         };
     }   // namespace Finance
 }   // namespace Jason

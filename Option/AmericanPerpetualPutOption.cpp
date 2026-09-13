@@ -75,5 +75,17 @@ namespace Jason
             return std::max(getK() - S, 0.0);
         }
 
+        bool AmericanPerpetualPutOption::hasClosedForm() const
+        {
+            return true;
+        }
+
+        bool AmericanPerpetualPutOption::isPerpetual() const
+        {
+            return true;
+        }
+
+
+
     }   // namespace Finance
 }   // namespace Jason
