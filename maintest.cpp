@@ -153,7 +153,7 @@ int main()
     std::vector<std::vector<double> > gammaOverSKsigT = EuropeanOptionMatrix<EuropeanOption>(Batch5c, labels2, meshes2, 
                                                                              &EuropeanOption::gamma);
 
-    /*
+
     
         We have to force deduction to euro option above since gamma lives in eurooption but template deduces 
         the option to be the derived class member, EuroCallOption
