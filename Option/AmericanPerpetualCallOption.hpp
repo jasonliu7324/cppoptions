@@ -34,6 +34,8 @@ namespace Jason
 
                 // Call pricer
                 double price() const;
+                double PayOff() const;              // Returns payoff
+                double PayOff(double S) const;      // Returns payoff given asset price S
 
         };
     }   // namespace Finance

@@ -34,6 +34,8 @@ namespace Jason
 
                 // Put pricer
                 double price() const;
+                double PayOff() const;              // returns payoff of perpetual put
+                double PayOff(double S) const;      // returns payoff of perpetual put given asset price
 
         };
     }   // namespace Finance

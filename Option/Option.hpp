@@ -55,6 +55,7 @@ namespace Jason
                 // Will vary depending on derived class
                 // E.g. EuroPutOption will have different Price() vs EuroCallOption
                 virtual double price() const = 0;       // Polymorphic price function 
+                virtual double PayOff() const = 0;      // Polymorphic payoff function
         };
     }   // namespace Finance
 }   // namespace Jason

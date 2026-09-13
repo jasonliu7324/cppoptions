@@ -7,6 +7,7 @@
 #include "AmericanPerpetualPutOption.hpp"
 #include "Option.hpp"
 #include <cmath>
+#include <algorithm>
 
 namespace Jason
 {
@@ -63,5 +64,16 @@ namespace Jason
         {
             return getK()/(1 - y2()) * std::pow(((y2() - 1)/y2() * (getS()/getK())) ,y2());
         }
+
+        // PayOff implementation
+        double AmericanPerpetualPutOption::PayOff() const
+        {
+            return std::max(getK() - getS(), 0.0);
+        }
+        double AmericanPerpetualPutOption::PayOff(double S) const
+        {
+            return std::max(getK() - S, 0.0);
+        }
+
     }   // namespace Finance
 }   // namespace Jason

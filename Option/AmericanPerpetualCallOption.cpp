@@ -7,6 +7,7 @@
 #include "AmericanPerpetualCallOption.hpp"
 #include "Option.hpp"
 #include <cmath>
+#include <algorithm>
 
 namespace Jason
 {
@@ -63,6 +64,17 @@ namespace Jason
         {
             return getK()/(y1() - 1) * std::pow(((y1() - 1)/y1() * (getS()/getK())) ,y1());
         }
+
+        // Payoff implementation
+        double AmericanPerpetualCallOption::PayOff() const
+        {
+            return std::max(getS() - getK(), 0.0);
+        }
+        double AmericanPerpetualCallOption::PayOff(double S) const
+        {
+            return std::max(S - getK(), 0.0);
+        }
+        
 
     }   // namespace Finance
 }   // namespace Finance

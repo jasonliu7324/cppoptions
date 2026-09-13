@@ -7,8 +7,9 @@
 #include "EuropeanCallOption.hpp"
 #include "OptionGlobalFunctions.hpp"    // Has specialized math functions for computation
 
-#include <cmath>    // Necessary for math functions
+#include <cmath>           // Necessary for math functions
 #include <iostream>
+#include <algorithm>       // Necessary for max
 
 namespace Jason
 {
@@ -97,5 +98,16 @@ namespace Jason
 
             return diff / (2 * h);
         }
+
+        // PayOff implementation
+        double EuropeanCallOption::PayOff() const
+        {
+            return std::max(getS() - getK(), 0.0);
+        }
+        double EuropeanCallOption::PayOff(double S) const
+        {
+            return std::max(S - getK(), 0.0);
+        }
+
     }   // namespace Finance
 }   // namespace Jason

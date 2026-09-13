@@ -9,6 +9,7 @@
 
 #include <cmath>    // Necessary math functions
 #include <iostream>
+#include <algorithm>    // Needed for max()
 
 namespace Jason
 {
@@ -96,6 +97,16 @@ namespace Jason
             }
 
             return diff / (2 * h);
+        }
+
+        // PayOff implementation
+        double EuropeanPutOption::PayOff() const
+        {
+            return std::max(getK() - getS(), 0.0);
+        }
+        double EuropeanPutOption::PayOff(double S) const
+        {
+            return std::max(getK() - S, 0.0);
         }
 
     }   // namespace Finance
