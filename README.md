@@ -1,5 +1,5 @@
 # Options Library
-Home to private access of Options Library + Any math backengine for Options
+Home to Options Library + Any math backengine for Options
 
 ## Local setup (create .vscode/settings.json — not tracked in git)
 
