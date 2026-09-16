@@ -25,16 +25,17 @@ namespace Jason::Finance
             MonteCarlo(double NSIM, double NT);                         // Specific construcotr
             MonteCarlo(const MonteCarlo& source);                       // Copy constructor
             MonteCarlo& operator = (const MonteCarlo& source);          // Assignment operator
-            ~MonteCarlo() override;                                              // Default destructor
+            ~MonteCarlo() override;                                     // Default destructor
 
-            std::string name() const override;
-            std::optional<double> price() const override;
-            bool isAvailable(const Option& opt) const override;
+            std::string name() const override;                                      // Name
+            std::optional<double> price(const Option& opt) const override;          // Pricer function
+            bool isAvailable(const Option& opt) const override;                     // Checks availability
 
-            double getNSIM() const;
-            void setNSIM(double val);
-            double getNT() const;
-            void setNT(double val);
+            // Getters and setters inlined
+            double getNSIM() const {return NSIM;};
+            double getNT() const {return NT;};
+            void setNSIM(double val) {NSIM = val;};
+            void setNT(double val) {NT = val;};
             
     };
 
