@@ -35,8 +35,8 @@ namespace Jason
                     
                 virtual ~EuropeanOption();                          // Default Destructor
 
-                double getT() const {return T;}                     // Getter for T
-                void setT(double new_T);                            // Setter for T
+                double getT() const override {return T;};           // Getter for T
+                void setT(double new_T) override;                   // Setter for T
 
                 EuropeanOption& operator = (const EuropeanOption& source);      // Assignment operator
 

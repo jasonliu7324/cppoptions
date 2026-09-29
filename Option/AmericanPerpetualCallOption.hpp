@@ -40,6 +40,9 @@ namespace Jason
                 bool hasClosedForm() const; 
                 bool isPerpetual() const;
 
+                double getT() const override {return -1;};
+                void setT(double new_T) override {};
+
         };
     }   // namespace Finance
 }   // namespace Jason

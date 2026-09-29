@@ -6,6 +6,7 @@
 
 // 9/2026: Updated with new Virtual functions PayOff, hasClosedForm, and isPerpetual
 //         Updated for implementing FDM and MC
+// 9/29/26: Added PVMF getT and setT to resolve polymorphism issues
 
 #ifndef OPTION_HPP
 #define OPTION_HPP
@@ -57,8 +58,13 @@ namespace Jason
                 // Virtual functions
                 virtual double price() const = 0;          // Polymorphic price function 
                 virtual double PayOff() const = 0;         // Polymorphic payoff function
+                virtual double PayOff(double S) const = 0;
                 virtual bool hasClosedForm() const = 0;    // Checks if there exists closed form solution
                 virtual bool isPerpetual() const = 0;      // Checks if there exists infinite time horizon
+
+                // Virtual getT and setT functions 
+                virtual double getT() const = 0;
+                virtual void setT(double new_T) = 0;
         };
     }   // namespace Finance
 }   // namespace Jason
