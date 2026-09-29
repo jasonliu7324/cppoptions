@@ -10,6 +10,7 @@
 #include "PricingMethod.hpp"
 #include "Option.hpp"
 #include <optional>
+#include <vector>
 #include <string>
 
 namespace Jason::Finance
@@ -17,8 +18,9 @@ namespace Jason::Finance
     class MonteCarlo : public PricingMethod
     {
         private: 
-            long NSIM;          // Number of simulations
-            long NT;            // Number of time steps
+            long NSIM;                              // Number of simulations
+            long NT;                                // Number of time steps
+            std::vector<double> current_mesh;       // Encodes the most recent price sim
 
         public:
             MonteCarlo();                                               // Default constructor
@@ -38,7 +40,6 @@ namespace Jason::Finance
             void setNT(double val) {NT = val;};
             
     };
-
 
 }   // namespace Jason::Finance
 

@@ -55,7 +55,7 @@ namespace Jason::Finance
 
 
     // Pricer
-    std::optional<double> MonteCarlo::price() const
+    std::optional<double> MonteCarlo::price(const Option& opt) const
     {
         if (!isAvailable)
         {
