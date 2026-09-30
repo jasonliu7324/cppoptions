@@ -99,7 +99,7 @@ namespace Jason::Finance
                 dW = normal(rng);
 
                 VNew = VOld + (k * (opt.getR() * VOld))
-                            + (sqrk * opt.getSig() * pow(VOld, 1.0) * dW);
+                            + (sqrk * opt.getSig() * VOld * dW);
 
                 VOld = VNew;
             }
