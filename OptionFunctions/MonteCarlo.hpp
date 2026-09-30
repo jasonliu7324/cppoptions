@@ -35,8 +35,8 @@ namespace Jason::Finance
             bool isAvailable(const Option& opt) const override;                     // Checks availability
 
             void pathSim(const Option& opt) const;
-            double standDev() const;
-            double standErr() const;
+            double standDev(const Option& opt) const;
+            double standErr(const Option& opt) const;
 
             // Getters and setters inlined
             double getNSIM() const {return NSIM;};

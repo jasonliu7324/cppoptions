@@ -3,7 +3,8 @@
 //
 // 
 //  9/29: Implemented pathSim
-//  9/30: Implement price/standDev/standErr
+//  9/30: Implemented price/SD/SE
+//  To do: improve SD/SE (maybe update with private member data so no need for multiple calls)
 
 #include "MonteCarlo.hpp"
 #include "PricingMethod.hpp"
@@ -16,6 +17,7 @@
 #include <boost/random/normal_distribution.hpp>
 #include <random>
 #include <cmath>
+#include <numeric>
 
 
 namespace Jason::Finance
@@ -68,6 +70,16 @@ namespace Jason::Finance
         {
             return std::nullopt;
         }
+
+        // Call pathSim
+        this -> pathSim(opt);
+        std::vector<double>& payoffs = current_mesh.value();
+        
+        // Sum the payoffs
+        double sum = std::accumulate(payoffs.begin(), payoffs.end(), 0.0);
+
+        // Average then discount
+        return (sum / double(NSIM)) * exp(-opt.getR() * opt.getT());
     }
 
     // Simulates a path when price() is called
@@ -112,15 +124,24 @@ namespace Jason::Finance
         current_mesh = std::move(result);
     }
 
-    double MonteCarlo::standDev() const
+    double MonteCarlo::standDev(const Option& opt) const
     {   
+        std::vector<double>& payoffs = current_mesh.value();
+
+        double M = payoffs.size();
+        double sum = std::accumulate(payoffs.begin(), payoffs.end(), 0.0);
+        double square_sum = std::inner_product(payoffs.begin(), payoffs.end(), payoffs.begin(),  0.0);
+
+        return (sqrt((square_sum) - (1 / M) * (sum * sum)) / (M - 1) * exp(-opt.getR() * opt.getT()));
+
     }
 
-    double MonteCarlo::standErr() const
+    double MonteCarlo::standErr(const Option& opt) const
     {
+        double sd = this -> standDev(opt);
+        double M = current_mesh.value().size();
+
+        return sd / sqrt(M);
     }
-
-
-
 
 }   // namespace Jason::Finance
