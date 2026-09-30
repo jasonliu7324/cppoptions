@@ -19,6 +19,7 @@
 #include "OptionGlobalFunctions.hpp"
 #include "PricingMethod.hpp"
 #include "ExactPrice.hpp"
+#include "MonteCarlo.hpp"
 
 #include <iostream>
 #include <vector>
@@ -29,9 +30,13 @@ int main()
 {
     EuropeanCallOption call1(65.0, 60, 0.08, 0.3, 0.08, 1);
     ExactPrice exact; 
+    MonteCarlo mc1(500000, 300);
 
     std::cout << *exact.price(call1) << std::endl;
-    std::cout << call1.price() << std::endl;
+    std::cout << *mc1.price(call1) << std::endl;
+    std::cout << mc1.standDev(call1) << std::endl;
+    std::cout << mc1.standErr(call1) << std::endl;
+
 
     return 0;
 }
