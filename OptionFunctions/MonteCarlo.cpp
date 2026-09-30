@@ -144,6 +144,5 @@ namespace Jason::Finance
         return sd / sqrt(M);
     }
 
-    // testing
 
 }   // namespace Jason::Finance
