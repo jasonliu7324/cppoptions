@@ -1,8 +1,9 @@
 //  Source file for MonteCarlo pricing class
 //
 //
-//
+// 
 //  9/29: Implemented pathSim
+//  9/30: Implement price/standDev/standErr
 
 #include "MonteCarlo.hpp"
 #include "PricingMethod.hpp"
@@ -98,6 +99,7 @@ namespace Jason::Finance
             {
                 dW = normal(rng);
 
+                // Explicit Euler
                 VNew = VOld + (k * (opt.getR() * VOld))
                             + (sqrk * opt.getSig() * VOld * dW);
 
