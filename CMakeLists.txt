@@ -14,7 +14,8 @@ add_executable(options_pricing
     OptionFunctions/OptionGlobalFunctions.cpp
     OptionFunctions/MonteCarlo.cpp
     OptionFunctions/PricingMethod.cpp
-    OptionFunctions/ExactPrice.cpp
+    OptionFunctions/ExactPrice.cpp  
+    OptionFunctions/Range.hpp
 
     Option/Option.cpp
     Option/EuropeanOption.cpp
