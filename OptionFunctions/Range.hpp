@@ -8,13 +8,14 @@
 #define RANGE_HPP
 
 #include <vector>
+#include <cmath>
 
 template <typename T>
 class Range
 {
     private:
-        T lower;        // Lower bound
-        T upper;        // Upper bound
+        T lower_;        // Lower bound
+        T upper_;        // Upper bound
     public:
         Range();                                // Default constructor
         Range(const T& low, const T& high);     // Specific constructor
@@ -25,12 +26,12 @@ class Range
         ~Range();       // Destructor
 
         // Setter
-        void lower(const T& val) {lower = val;};       
-        void upper(const T& val) {upper = val;};
+        void lower(const T& val) {lower_ = val;};       
+        void upper(const T& val) {upper_ = val;};
 
         // Getter
-        T lower() const {return lower;};
-        T upper() const {return upper;};
+        T lower() const {return lower_;};
+        T upper() const {return upper_;};
 
         std::vector<T> mesh(long steps) const;      // Mesh generator
 };
@@ -51,15 +52,15 @@ Range<T>::Range(const Range<T>& source) : lower(source.lower), upper(source.uppe
 
 // Assignment operator
 template <typename T>
-Range<T>& Range<T>::operator = (const Range<T>& comp)
+Range<T>& Range<T>::operator = (const Range<T>& source)
 {
     if (this == &source)
     {
         return *this;
     }
 
-    upper = comp.upper;
-    lower = comp.lower;
+    upper_ = comp.upper_;
+    lower_ = comp.lower_;
 
     return *this;
 }
@@ -72,12 +73,12 @@ Range<T>::~Range() {};
 template <typename T> 
 std::vector<T> Range<T>::mesh(long steps) const
 {
-    T h = static_cast<int>(std::round(upper - lower) / T(steps));       // Step size
-    std::vector<T> result(steps + 1);                                   // return vector
+    T h = (std::round(upper_ - lower_) / T(steps));       // Step size
+    std::vector<T> result.reserve(steps + 1);             // return vector
 
-    for (long i = 0; i < steps; ++i)
+    for (long i = 0; i <= steps; ++i)
     {
-        result.push_back(lower + i * h);
+        result.push_back(lower_ + i * h);
     }
 
     return result;
