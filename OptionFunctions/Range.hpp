@@ -40,15 +40,15 @@ class Range
 
 // Default constructor
 template <typename T> 
-Range<T>::Range() : lower(0), upper(0) {};
+Range<T>::Range() : lower_(0), upper_(0) {};
 
 // Specific constructor
 template <typename T> 
-Range<T>::Range(const T& low, const T& high) : lower(low), upper(high) {};
+Range<T>::Range(const T& low, const T& high) : lower_(low), upper_(high) {};
 
 // Copy Constructor
 template <typename T>
-Range<T>::Range(const Range<T>& source) : lower(source.lower), upper(source.upper) {};
+Range<T>::Range(const Range<T>& source) : lower_(source.lower_), upper_(source.upper_) {};
 
 // Assignment operator
 template <typename T>
@@ -59,9 +59,8 @@ Range<T>& Range<T>::operator = (const Range<T>& source)
         return *this;
     }
 
-    upper_ = comp.upper_;
-    lower_ = comp.lower_;
-
+    upper_ = source.upper_;
+    lower_ = source.lower_;
     return *this;
 }
 
@@ -74,7 +73,9 @@ template <typename T>
 std::vector<T> Range<T>::mesh(long steps) const
 {
     T h = (std::round(upper_ - lower_) / T(steps));       // Step size
-    std::vector<T> result.reserve(steps + 1);             // return vector
+    
+    std::vector<T> result;
+    result.reserve(steps + 1);
 
     for (long i = 0; i <= steps; ++i)
     {
