@@ -126,13 +126,13 @@ namespace Jason::Finance
 
     double MonteCarlo::standDev(const Option& opt) const
     {   
-        std::vector<double>& payoffs = current_mesh.value();
+        const std::vector<double>& payoffs = current_mesh.value();
 
         double M = payoffs.size();
         double sum = std::accumulate(payoffs.begin(), payoffs.end(), 0.0);
         double square_sum = std::inner_product(payoffs.begin(), payoffs.end(), payoffs.begin(),  0.0);
 
-        return (sqrt((square_sum) - (1 / M) * (sum * sum)) / (M - 1) * exp(-opt.getR() * opt.getT()));
+        return sqrt(((square_sum) - (1 / M) * (sum * sum)) / (M - 1)) * exp(-opt.getR() * opt.getT());
 
     }
 
