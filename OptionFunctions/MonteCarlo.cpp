@@ -4,6 +4,7 @@
 // 
 //  9/29: Implemented pathSim
 //  9/30: Implemented price/SD/SE as well as member data for SD/SE
+//  10/1: Implemented sample_path member data and getter as well as sample_path_temp in pathSim
 
 
 #include "MonteCarlo.hpp"
