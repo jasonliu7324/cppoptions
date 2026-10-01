@@ -3,8 +3,8 @@
 //
 // 
 //  9/29: Implemented pathSim
-//  9/30: Implemented price/SD/SE
-//  To do: improve SD/SE (maybe update with private member data so no need for multiple calls)
+//  9/30: Implemented price/SD/SE as well as member data for SD/SE
+
 
 #include "MonteCarlo.hpp"
 #include "PricingMethod.hpp"
@@ -18,14 +18,15 @@
 #include <random>
 #include <cmath>
 #include <numeric>
+#include <utility>
 
 
 namespace Jason::Finance
 {
     // Constructor implementations
-    MonteCarlo::MonteCarlo() : PricingMethod() , NSIM(0), NT(0), current_mesh(std::nullopt) {};
-    MonteCarlo::MonteCarlo(double NSIM, double NT) : PricingMethod(), NSIM(NSIM), NT(NT), current_mesh(std::nullopt) {};
-    MonteCarlo::MonteCarlo(const MonteCarlo& source) : PricingMethod(source), NSIM(source.NSIM), NT(source.NT), current_mesh(std::nullopt) {};
+    MonteCarlo::MonteCarlo() : PricingMethod() , NSIM(0), NT(0), payoffs(std::nullopt), current_sd(std::nullopt), current_se(std::nullopt), sample_path(std::nullopt) {};
+    MonteCarlo::MonteCarlo(double NSIM, double NT) : PricingMethod(), NSIM(NSIM), NT(NT), payoffs(std::nullopt), current_sd(std::nullopt), current_se(std::nullopt), sample_path(std::nullopt) {};
+    MonteCarlo::MonteCarlo(const MonteCarlo& source) : PricingMethod(source), NSIM(source.NSIM), NT(source.NT), payoffs(std::nullopt), current_sd(std::nullopt), current_se(std::nullopt), sample_path(std::nullopt) {};
 
     // Assignment oeprator
     MonteCarlo& MonteCarlo::operator = (const MonteCarlo& source)
@@ -38,7 +39,10 @@ namespace Jason::Finance
         PricingMethod::operator = (source);
         NSIM = source.NSIM;
         NT = source.NT;
-        current_mesh = std::nullopt;
+        payoffs = std::nullopt;
+        current_sd = std::nullopt;
+        current_se = std::nullopt;
+        sample_path = std::nullopt;
 
         return *this;
 
@@ -73,10 +77,10 @@ namespace Jason::Finance
 
         // Call pathSim
         this -> pathSim(opt);
-        std::vector<double>& payoffs = current_mesh.value();
+        std::vector<double>& payoff = payoffs.value();
         
         // Sum the payoffs
-        double sum = std::accumulate(payoffs.begin(), payoffs.end(), 0.0);
+        double sum = std::accumulate(payoff.begin(), payoff.end(), 0.0);
 
         // Average then discount
         return (sum / double(NSIM)) * exp(-opt.getR() * opt.getT());
@@ -89,7 +93,13 @@ namespace Jason::Finance
         boost::random::lagged_fibonacci607 rng(std::random_device{}());
         boost::random::normal_distribution<double> normal(0.0, 1.0);
 
+        // Sample path for visualization
+        std::vector<std::vector<double>> sample_path_temp;
+        std::vector<double> path_temp;
+        sample_path_temp.reserve(100);
+        path_temp.reserve(NT);
 
+        // Payoff vector to be returned
         std::vector<double> result;
         result.reserve(NSIM);
 
@@ -107,6 +117,14 @@ namespace Jason::Finance
         for (long i = 0; i < NSIM; ++i)
         {
             VOld = opt.getS();
+
+            // Clear and add new path to path_temp
+            path_temp.clear();
+
+            if (i < 100)
+            {
+                path_temp.push_back(VOld);
+            }
             for (unsigned long index = 1; index < x.size(); ++ index)
             {
                 dW = normal(rng);
@@ -116,32 +134,57 @@ namespace Jason::Finance
                             + (sqrk * opt.getSig() * VOld * dW);
 
                 VOld = VNew;
+
+                // Add each new value to the path_temp vector
+                if (i < 100)
+                {
+                    path_temp.push_back(VNew);
+                }
+            }
+
+            // Add the path_temp to the sample_path_temp vector
+            if (i < 100)
+            {
+                sample_path_temp.push_back(path_temp);
             }
 
             result.push_back(opt.PayOff(VNew));
         }
 
-        current_mesh = std::move(result);
+        sample_path = std::move(sample_path_temp);
+        payoffs = std::move(result);
     }
 
     double MonteCarlo::standDev(const Option& opt) const
     {   
-        const std::vector<double>& payoffs = current_mesh.value();
+        const std::vector<double>& payoff = payoffs.value();
 
-        double M = payoffs.size();
-        double sum = std::accumulate(payoffs.begin(), payoffs.end(), 0.0);
-        double square_sum = std::inner_product(payoffs.begin(), payoffs.end(), payoffs.begin(),  0.0);
+        double M = payoff.size();
+        double sum = std::accumulate(payoff.begin(), payoff.end(), 0.0);
+        double square_sum = std::inner_product(payoff.begin(), payoff.end(), payoff.begin(),  0.0);
 
-        return sqrt(((square_sum) - (1 / M) * (sum * sum)) / (M - 1)) * exp(-opt.getR() * opt.getT());
-
+        double sd = sqrt(((square_sum) - (1 / M) * (sum * sum)) / (M - 1)) * exp(-opt.getR() * opt.getT());
+        current_sd = sd;
+        return sd;
     }
 
     double MonteCarlo::standErr(const Option& opt) const
     {
-        double sd = this -> standDev(opt);
-        double M = current_mesh.value().size();
+        if (current_sd == std::nullopt)
+        {
+            this -> standDev(opt);
+        }
+        else
+        {
+            current_sd = this -> standDev(opt);
+        }
+        const std::vector<double>& payoff = payoffs.value();
+        double M = payoff.size();
 
-        return sd / sqrt(M);
+        double se = current_sd.value() / sqrt(M);
+        current_se = se;
+
+        return se;
     }
 
 
