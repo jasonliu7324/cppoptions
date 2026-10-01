@@ -175,10 +175,7 @@ namespace Jason::Finance
         {
             this -> standDev(opt);
         }
-        else
-        {
-            current_sd = this -> standDev(opt);
-        }
+        
         const std::vector<double>& payoff = payoffs.value();
         double M = payoff.size();
 
