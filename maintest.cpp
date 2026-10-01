@@ -20,6 +20,7 @@
 #include "PricingMethod.hpp"
 #include "ExactPrice.hpp"
 #include "MonteCarlo.hpp"
+#include "UtilityFunctions.hpp"
 
 #include <iostream>
 #include <vector>
@@ -34,8 +35,11 @@ int main()
 
     std::cout << *exact.price(call1) << std::endl;
     std::cout << *mc1.price(call1) << std::endl;
-    std::cout << mc1.standDev(call1) << std::endl;
-    std::cout << mc1.standErr(call1) << std::endl;
+    std::vector<std::vector<double>> sample_path = mc1.getSamplePath();
+    std::cout << sample_path.size() << std::endl;
+    std::cout << sample_path[0].size() << std::endl;
+    std::cout << sample_path[1].size() << std::endl;
+    std::cout << sample_path[50].size() << std::endl;
 
 
     return 0;
