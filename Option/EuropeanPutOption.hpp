@@ -31,10 +31,10 @@ namespace Jason
 
                 double price() const;   // Put pricer
 
-                double delta() const;               // Delta of put option
-                double deltaApprox(double h);       // Delta via 3-point order approximation
-                double PayOff() const;              // Returns payoff
-                double PayOff(double S) const;      // Returns payoff given asset price
+                double delta() const;                        // Delta of put option
+                double deltaApprox(double h);                // Delta via 3-point order approximation
+                double PayOff() const;                       // Returns payoff
+                double PayOff(double S) const override;      // Returns payoff given asset price
         };
     }   // namespace Finance
 }   // namespace Jason
