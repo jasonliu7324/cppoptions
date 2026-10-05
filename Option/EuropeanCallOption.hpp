@@ -31,11 +31,11 @@ namespace Jason
 
                 double price() const;   // Call pricer
 
-                double delta() const;               // Delta of call option
-                double deltaApprox(double h);       // Delta via 3-point order approximation
+                double delta() const;                        // Delta of call option
+                double deltaApprox(double h);                // Delta via 3-point order approximation
 
-                double PayOff() const;              // Computes Call payoff
-                double PayOff(double S) const;      // Computes Call payoff given asset price
+                double PayOff() const;                       // Computes Call payoff
+                double PayOff(double S) const override;      // Computes Call payoff given asset price
         };
     }   // namespace Finance
 }   // namespace Jason
