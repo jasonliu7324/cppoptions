@@ -57,7 +57,7 @@ namespace Jason
 
                 // Virtual functions
                 virtual double price() const = 0;          // Polymorphic price function 
-                virtual double PayOff() const = 0;         // Polymorphic payoff function
+                // virtual double PayOff() const = 0;         // Polymorphic payoff function
                 virtual double PayOff(double S) const = 0;
                 virtual bool hasClosedForm() const = 0;    // Checks if there exists closed form solution
                 virtual bool isPerpetual() const = 0;      // Checks if there exists infinite time horizon
