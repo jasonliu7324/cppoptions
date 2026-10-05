@@ -6,6 +6,7 @@
 
 #include "ExactPrice.hpp"
 #include "Option.hpp"
+#include <iostream>
 
 namespace Jason::Finance
 {
@@ -46,6 +47,7 @@ namespace Jason::Finance
     {
         if (!isAvailable(opt))
         {
+            std::cout << "Not Available for this option type" << std::endl;
             return std::nullopt;
         }
 
